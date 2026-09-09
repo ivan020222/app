@@ -11,7 +11,7 @@ import { TemperatureSensorsService } from './temperature-sensors.service.js';
 import { CreateTemperatureSensorDto } from './dto/create-temperature-sensor.dto.js';
 import { UpdateTemperatureSensorDto } from './dto/update-temperature-sensor.dto.js';
 
-@Controller('sensors')
+@Controller('temperature-sensors')
 export class TemperatureSensorsController {
   constructor(private readonly sensorsService:
   TemperatureSensorsService) {}
