@@ -13,31 +13,29 @@ import { UpdateTemperatureSensorDto } from './dto/update-temperature-sensor.dto.
 
 @Controller('temperature-sensors')
 export class TemperatureSensorsController {
-  constructor(private readonly sensorsService:
+  constructor(private readonly temperatureSensorsService:
   TemperatureSensorsService) {}
   @Post()
-  create(@Body() createSensorDto:
-  CreateTemperatureSensorDto) {
-    return this.sensorsService.create(createSensorDto);
+  create(@Body() createSensorDto: CreateTemperatureSensorDto) {
+    return this.temperatureSensorsService.create(createSensorDto);
   }
   @Get()
   findAll() {
-    return this.sensorsService.findAll();
+    return this.temperatureSensorsService.findAll();
   }
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.sensorsService.findOne(id);
+    return this.temperatureSensorsService.findOne(id);
   }
   @Patch(':id')
   update(
     @Param('id') id: string,
     @Body() updateSensorDto: UpdateTemperatureSensorDto,
   ) {
-    return this.sensorsService.update(id, updateSensorDto);
+    return this.temperatureSensorsService.update(id, updateSensorDto);
   }
-
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.sensorsService.remove(id);
+    return this.temperatureSensorsService.remove(id);
   }
 }

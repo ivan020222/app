@@ -1,44 +1,41 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { LightSensor } from './entities/light-sensor.entity.js';
 import { CreateLightSensorDto } from './dto/create-light-sensor.dto.js';
 import { UpdateLightSensorDto } from './dto/update-light-sensor.dto.js';
-import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class LightSensorsService {
-  private sensors: LightSensor[] = [];
+  constructor(
+    @InjectRepository(LightSensor)
+    private readonly lightSensorRepository: Repository<LightSensor>,
+  ) {}
 
-  create(createSensorDto: CreateLightSensorDto): LightSensor {
-    const sensor: LightSensor = {
-      ...createSensorDto,
-      id: uuidv4(),
-      timestamp: new Date(),
-    };
-    this.sensors.push(sensor);
-    return sensor;
+  async create(createSensorDto: CreateLightSensorDto){
+    const record = this.lightSensorRepository.create(createSensorDto);
+    return await this.lightSensorRepository.save(record);
   }
 
-  findAll() {
-    return this.sensors;
+  async findAll() {
+    return await this.lightSensorRepository.find({
+      order: { createdAt: 'DESC' },
+      take: 50,
+    });
   }
-
-  findOne(id: string) {
-    const sensor = this.sensors.find((s) => s.id === id);
+  async findOne(id: string) {
+    const sensor = await this.lightSensorRepository.findOne({ where: { id } });
     if (!sensor) throw new NotFoundException(`sensor with id ${id} not found`);
     return sensor;
   }
-
-  update(
-    id: string,
-    updateSensorDto: UpdateLightSensorDto,
-  ): LightSensor {
-    const sensor = this.findOne(id);
+  async update(id: string, updateSensorDto: UpdateLightSensorDto) {
+    const sensor = await this.findOne(id);
     Object.assign(sensor, updateSensorDto);
-    return sensor;
+    return await this.lightSensorRepository.save(sensor);
   }
 
-  remove(id: string): void {
-    const sensor = this.findOne(id);
-    this.sensors = this.sensors.filter((s) => s.id !== sensor.id);
+  async remove(id: string) {
+    const sensor = await this.findOne(id);
+    await this.lightSensorRepository.remove(sensor);
   }
-}
+} 
