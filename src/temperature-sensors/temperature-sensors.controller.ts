@@ -29,6 +29,14 @@ export class TemperatureSensorsController {
   findAll() {
     return this.temperatureSensorsService.findAll();
   }
+  @Sse('alerts')
+  alerts(): Observable<MessageEvent> {
+    return this.alertsService.getAlertStream().pipe(
+      map((alert) => ({
+        data: alert,
+      })),
+    );
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.temperatureSensorsService.findOne(id);
@@ -43,13 +51,5 @@ export class TemperatureSensorsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.temperatureSensorsService.remove(id);
-  }
-  @Sse('alerts')
-  alerts(): Observable<MessageEvent> {
-    return this.alertsService.getAlertStream().pipe(
-      map((alert) => ({
-        data: alert,
-      })),
-    );
   }
 }

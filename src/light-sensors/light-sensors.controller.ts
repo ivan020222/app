@@ -29,6 +29,14 @@ export class LightSensorsController {
   findAll() {
     return this.lightSensorsService.findAll();
   }
+  @Sse('alerts')
+  alerts(): Observable<MessageEvent> {
+    return this.alertsService.getAlertStream().pipe(
+      map((alert) => ({
+        data: alert,
+      })),
+    );
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.lightSensorsService.findOne(id);
@@ -43,13 +51,5 @@ export class LightSensorsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.lightSensorsService.remove(id);
-  }
-  @Sse('alerts')
-  alerts(): Observable<MessageEvent> {
-    return this.alertsService.getAlertStream().pipe(
-      map((alert) => ({
-        data: alert,
-      })),
-    );
   }
 }

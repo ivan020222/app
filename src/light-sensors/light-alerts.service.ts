@@ -8,7 +8,6 @@ export interface LightAlert {
     timestamp: Date;
     severity: 'critical' | 'warning';
 }
-
 @Injectable()
 export class LightAlertsService {
     private alertSubject = new Subject<LightAlert>();
