@@ -32,7 +32,7 @@ export class LightSensorsService {
 
   async findAll() {
     return await this.lightSensorRepository.find({
-      order: { createdAt: 'DESC' },
+      order: { createdAt: 'ASC' },
       take: 50,
     });
   }

@@ -32,7 +32,7 @@ export class TemperatureSensorsService {
 
   async findAll() {
     return await this.temperatureSensorRepository.find({
-      order: { createdAt: 'DESC' },
+      order: { createdAt: 'ASC' },
       take: 50,
     });
   }
