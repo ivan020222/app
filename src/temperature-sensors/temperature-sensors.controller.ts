@@ -6,15 +6,21 @@ import {
   Patch,
   Param,
   Delete,
+  Sse,
+  MessageEvent,
 } from '@nestjs/common';
 import { TemperatureSensorsService } from './temperature-sensors.service.js';
 import { CreateTemperatureSensorDto } from './dto/create-temperature-sensor.dto.js';
 import { UpdateTemperatureSensorDto } from './dto/update-temperature-sensor.dto.js';
+import { TemperatureAlertsService } from './temperature-alerts.service.js';
+import { Observable, map } from 'rxjs';
 
 @Controller('temperature-sensors')
 export class TemperatureSensorsController {
-  constructor(private readonly temperatureSensorsService:
-  TemperatureSensorsService) {}
+  constructor(
+    private readonly temperatureSensorsService: TemperatureSensorsService,
+    private readonly alertsService: TemperatureAlertsService,
+  ) {}
   @Post()
   create(@Body() createSensorDto: CreateTemperatureSensorDto) {
     return this.temperatureSensorsService.create(createSensorDto);
@@ -37,5 +43,13 @@ export class TemperatureSensorsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.temperatureSensorsService.remove(id);
+  }
+  @Sse('alerts')
+  alerts(): Observable<MessageEvent> {
+    return this.alertsService.getAlertStream().pipe(
+      map((alert) => ({
+        data: alert,
+      })),
+    );
   }
 }
